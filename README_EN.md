@@ -1,30 +1,89 @@
-<!--
-  README for "authentication-authorization-JWT"
-  Generated: concise, clear docs for contributors and users
--->
-
-<p align="center">
+<div align="center">
   <img src="https://nestjs.com/img/logo-small.svg" width="120" alt="NestJS Logo" />
-</p>
+  
+  # Authentication & Authorization with JWT
+  
+  [![License](https://img.shields.io/github/license/wendel211/authentication-authorization-JWT)](./LICENSE)
+  [![GitHub stars](https://img.shields.io/github/stars/wendel211/authentication-authorization-JWT?style=social)](https://github.com/wendel211/authentication-authorization-JWT/stargazers)
+  [![TypeScript](https://img.shields.io/badge/TypeScript-5.7+-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+  [![Node.js](https://img.shields.io/badge/Node.js-14+-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
+  [![NestJS](https://img.shields.io/badge/NestJS-11+-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com/)
+  [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-15-4169E1?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+  [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
+  
+  **A complete NestJS authentication system with JWT tokens, refresh tokens, role-based access control, and Swagger documentation.**
+  
+  [Features](#-features) • [Installation](#-installation) • [API Documentation](#-api-documentation) • [Docker](#-docker) • [Testing](#-testing)
+</div>
 
-<!-- Badges -->
-[![License](https://img.shields.io/github/license/wendel211/authentication-authorization-JWT)](./LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/wendel211/authentication-authorization-JWT?style=social)](https://github.com/wendel211/authentication-authorization-JWT/stargazers)
-[![TypeScript](https://img.shields.io/badge/TypeScript-%3E%3D4.0-blue?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D14-green?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![NestJS](https://img.shields.io/badge/NestJS-%3E%3D7.0-E0234E?logo=nestjs&logoColor=white)](https://nestjs.com/)
+---
 
-## authentication-authorization-JWT
+## 📋 Table of Contents
 
-This repository is a NestJS starter implementing authentication and authorization using JSON Web Tokens (JWT). It's a compact example showing how to protect routes, create users, and sign/verify tokens using NestJS, TypeORM (or other chosen ORM), and Express middleware.
+- [About](#-about)
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Prerequisites](#-prerequisites)
+- [Installation](#-installation)
+- [Environment Variables](#-environment-variables)
+- [Running the Application](#-running-the-application)
+- [Docker Setup](#-docker)
+- [API Documentation](#-api-documentation)
+- [Project Structure](#-project-structure)
+- [Authentication Flow](#-authentication-flow)
+- [API Endpoints](#-api-endpoints)
+- [Testing](#-testing)
+- [Common Issues](#-common-issues)
+- [Contributing](#-contributing)
+- [License](#-license)
 
-Key features:
-- JWT-based authentication (signing & verification)
-- Local strategies for login and guards for protecting routes
-- Example `users` module with registration and user retrieval
-- Cookie parsing middleware (optional) and configuration-ready environment variables
+## 🎯 About
 
-This README explains how to install, run, and test the project locally and with Docker.
+This is a production-ready NestJS application demonstrating best practices for implementing authentication and authorization using **JWT (JSON Web Tokens)**. The project includes user registration, login, token refresh, logout, and protected routes with role-based access control.
+
+Built with modern TypeScript, this starter template is perfect for learning or kickstarting your next secure API project.
+
+## ✨ Features
+
+- ✅ **JWT Authentication** - Access tokens and refresh tokens
+- ✅ **Password Hashing** - Secure password storage with Argon2
+- ✅ **User Registration & Login** - Complete auth flow
+- ✅ **Token Refresh** - Automatic token renewal without re-login
+- ✅ **Logout** - Invalidate refresh tokens on logout
+- ✅ **Protected Routes** - Guard decorators for route protection
+- ✅ **Role-Based Access Control** - Custom decorators for authorization
+- ✅ **Swagger Documentation** - Interactive API docs at `/docs`
+- ✅ **TypeORM Integration** - PostgreSQL database with migrations
+- ✅ **Cookie Support** - Cookie parsing middleware
+- ✅ **Environment Configuration** - `.env` file support
+- ✅ **Docker Ready** - Docker Compose for PostgreSQL and pgAdmin
+- ✅ **Input Validation** - DTOs with class-validator
+- ✅ **Error Handling** - Structured error responses
+- ✅ **ESLint & Prettier** - Code formatting and linting
+
+## 🛠 Tech Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **NestJS** | 11.x | Progressive Node.js framework |
+| **TypeScript** | 5.7+ | Type-safe JavaScript |
+| **TypeORM** | 0.3.x | ORM for database operations |
+| **PostgreSQL** | 15 | Relational database |
+| **Passport JWT** | 4.0+ | JWT authentication strategy |
+| **Argon2** | 0.44+ | Password hashing |
+| **Swagger** | 11.x | API documentation |
+| **Docker** | - | Containerization |
+| **Jest** | 29.x | Testing framework |
+
+## 📦 Prerequisites
+
+Before you begin, ensure you have the following installed:
+
+- **Node.js** (v14 or higher) - [Download](https://nodejs.org/)
+- **npm** or **yarn** - Package manager
+- **PostgreSQL** (v12+) - Or use Docker (recommended)
+- **Docker & Docker Compose** (optional, for database) - [Download](https://www.docker.com/)
+- **Git** - Version control
 
 ## Quick Start
 
