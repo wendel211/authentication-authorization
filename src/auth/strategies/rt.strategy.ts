@@ -6,11 +6,11 @@ import { ConfigService } from '@nestjs/config';
 import { JwtPayload } from '../types/jwt-payload.type';
 
 function extractRt(req: Request): string | null {
-  // Opção: header Authorization: Bearer <refreshToken>
+  // Tenta extrair o refresh token do header Authorization: Bearer <token>
   const token = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
   if (token) return token;
 
-  // Se preferir, pode usar cookie httpOnly 'refresh_token'
+  // Alternativamente, permite pegar via cookie httpOnly chamado 'refresh_token'
   if (req.cookies?.['refresh_token']) return req.cookies['refresh_token'];
 
   return null;
