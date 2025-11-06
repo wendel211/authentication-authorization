@@ -8,6 +8,7 @@ import {
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
+import { CreateUserDto } from '../users/dto/create-user.dto';
 import { Public } from '../users/decorators/public.decorator';
 import { GetUser } from '../users/decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
@@ -18,7 +19,7 @@ export class AuthController {
 
   @Public()
   @Post('signup')
-  signup(@Body() dto: AuthDto) {
+  signup(@Body() dto: CreateUserDto) {
     return this.authService.signup(dto);
   }
 
