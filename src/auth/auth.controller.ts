@@ -1,8 +1,8 @@
 import { Body, Controller, HttpCode, HttpStatus, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { AuthDto } from './dto/auth.dto';
-import { Public } from '../common/decorators/public.decorator';
-import { GetUser } from '../common/decorators/get-user.decorator';
+import { Public } from '../users/decorators/public.decorator';
+import { GetUser } from '../users/decorators/get-user.decorator';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('auth')

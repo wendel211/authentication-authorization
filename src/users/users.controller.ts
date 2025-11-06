@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
-import { GetUser } from '../common/decorators/get-user.decorator';
-import { Roles } from '../common/decorators/roles.decorator';
+import { GetUser } from './decorators/get-user.decorator';
+import { Roles } from './decorators/roles.decorator';
 import { UserRole } from './user.entity';
 
 @Controller('users')
