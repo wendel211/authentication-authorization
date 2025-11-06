@@ -85,127 +85,496 @@ Before you begin, ensure you have the following installed:
 - **Docker & Docker Compose** (optional, for database) - [Download](https://www.docker.com/)
 - **Git** - Version control
 
-## Quick Start
 
-Requirements
-- Node.js (14+ recommended)
-- npm or yarn
-- Docker & docker-compose (optional, for running PostgreSQL)
+## 🚀 Installation
 
-Install dependencies
+### 1. Clone the repository
 
-PowerShell
-```powershell
+```bash
+git clone https://github.com/wendel211/authentication-authorization-JWT.git
+cd authentication-authorization-JWT
+```
+
+### 2. Install dependencies
+
+```bash
 npm install
-# or: yarn install
+# or with yarn
+yarn install
 ```
 
-Run in development mode
+### 3. Set up environment variables
 
-PowerShell
-```powershell
+Create a `.env` file in the root directory:
+
+```bash
+# Database Configuration
+DB_HOST=localhost
+DB_PORT=5433
+DB_USERNAME=postgres
+DB_PASSWORD=postgres
+DB_DATABASE=nest
+
+# JWT Secrets (CHANGE THESE IN PRODUCTION!)
+JWT_ACCESS_SECRET=your_super_secret_access_key_here
+JWT_REFRESH_SECRET=your_super_secret_refresh_key_here
+```
+
+> ⚠️ **Security Warning**: Never commit your `.env` file to version control. Always use strong, random secrets in production.
+
+### 4. Start the database (Docker)
+
+If you have Docker installed, the easiest way is to use the provided `docker-compose.yml`:
+
+```bash
+docker compose up -d
+```
+
+This will start:
+- **PostgreSQL** on port `5433`
+- **pgAdmin** (web interface) on `http://localhost:5050`
+
+pgAdmin credentials:
+- Email: `admin@yobi.local`
+- Password: `admin123`
+
+### 5. Run the application
+
+```bash
+# Development mode (with hot-reload)
 npm run start:dev
-# Or start normally: npm run start
+
+# Production mode
+npm run build
+npm run start:prod
 ```
 
-The application will default to port 3000 (see `src/main.ts`).
+The API will be available at `http://localhost:3000`
 
-## Environment
+## 🌐 Environment Variables
 
-Copy `.env.example` (if present) to `.env` and set values. Typical variables:
-- DATABASE_URL or DB_HOST/DB_PORT/DB_USER/DB_PASS/DB_NAME
-- JWT_SECRET
-- PORT
+| Variable | Description | Default | Required |
+|----------|-------------|---------|----------|
+| `DB_HOST` | PostgreSQL host | `localhost` | ✅ |
+| `DB_PORT` | PostgreSQL port | `5433` | ✅ |
+| `DB_USERNAME` | Database user | `postgres` | ✅ |
+| `DB_PASSWORD` | Database password | `postgres` | ✅ |
+| `DB_DATABASE` | Database name | `nest` | ✅ |
+| `JWT_ACCESS_SECRET` | Secret for access tokens | - | ✅ |
+| `JWT_REFRESH_SECRET` | Secret for refresh tokens | - | ✅ |
 
-If you plan to use the included `docker-compose.yml` to run PostgreSQL locally:
+## 🏃 Running the Application
 
-PowerShell
-```powershell
+```bash
+# Development mode (watch mode)
+npm run start:dev
+
+# Standard development
+npm run start
+
+# Debug mode
+npm run start:debug
+
+# Production mode
+npm run start:prod
+```
+
+The application runs on port **3000** by default.
+
+## 🐳 Docker
+
+### Using Docker Compose (Recommended)
+
+The project includes a `docker-compose.yml` with PostgreSQL and pgAdmin:
+
+```bash
+# Start containers
 docker compose up -d
-# Wait a few seconds for Postgres to initialize
+
+# View logs
+docker compose logs -f
+
+# Stop containers
+docker compose down
+
+# Stop and remove volumes (⚠️ deletes data)
+docker compose down -v
 ```
 
-## Available scripts
+### Database Access
 
-- `npm run start` — run production server
-- `npm run start:dev` — run with hot-reload (Nest CLI)
-- `npm run start:prod` — run compiled code
-- `npm run test` — run unit tests
-- `npm run test:e2e` — run end-to-end tests
-- `npm run test:cov` — run coverage
+**PostgreSQL Connection:**
+- Host: `localhost`
+- Port: `5433`
+- User: `postgres`
+- Password: `postgres`
+- Database: `nest`
 
-See `package.json` for full script list.
+**pgAdmin Web Interface:**
+- URL: `http://localhost:5050`
+- Email: `admin@yobi.local`
+- Password: `admin123`
 
-## Project Structure (high-level)
+## 📚 API Documentation
 
-- `src/main.ts` — application bootstrap
-- `src/app.module.ts` — root module
-- `src/auth` — authentication module, strategies, controllers
-- `src/users` — users module, controller, service, entity
-- `src/common` — shared guards, decorators, etc.
+Once the application is running, visit:
 
-## How Authentication Works (overview)
+**Swagger UI:** `http://localhost:3000/docs`
 
-1. User registers via `/users` (or an auth route) and gets stored in the DB.
-2. User logs in with credentials; the server validates and signs a JWT with `JWT_SECRET`.
-3. The client stores the token (HTTP-only cookie or Authorization header) and sends it with subsequent requests.
-4. Protected routes use a Guard that verifies the JWT and attaches user information to the request.
+The interactive API documentation allows you to:
+- Explore all endpoints
+- Test requests directly from the browser
+- View request/response schemas
+- Authenticate with JWT tokens
 
-## Example: Login and protect a route
+### Using Swagger for Authentication
 
-- POST /auth/login
-  - Request: JSON with `email` and `password`.
-  - Response: JWT in body or set as cookie depending on implementation.
+1. **Register a new user** via `POST /auth/signup`
+2. **Login** via `POST /auth/signin` to get your access token
+3. Click the **"Authorize"** button (🔒) at the top of Swagger
+4. Enter: `Bearer YOUR_ACCESS_TOKEN`
+5. Now you can test protected endpoints!
 
-- GET /users/me (protected)
-  - Requires Authorization header: `Bearer <token>` or cookie with token.
+## 📂 Project Structure
 
-Use Postman or curl for quick tests. Example using curl with Authorization header:
-
-```powershell
-curl -H "Authorization: Bearer <your_jwt>" http://localhost:3000/users/me
+```
+src/
+├── auth/                  # Authentication module
+│   ├── auth.controller.ts    # Auth endpoints (signup, signin, logout, refresh)
+│   ├── auth.service.ts       # Auth business logic
+│   ├── auth.module.ts        # Auth module configuration
+│   ├── dto/                  # Data Transfer Objects
+│   ├── strategies/           # Passport JWT strategies
+│   └── types/                # TypeScript types
+├── users/                 # Users module
+│   ├── user.entity.ts        # User database entity
+│   ├── users.controller.ts   # User endpoints
+│   ├── users.service.ts      # User business logic
+│   ├── users.module.ts       # Users module
+│   ├── dto/                  # User DTOs
+│   └── decorators/           # Custom decorators (@GetUser, @Public)
+├── common/                # Shared resources
+│   ├── decorators/           # Global decorators
+│   └── guards/               # Auth guards
+├── app.module.ts          # Root module
+├── app.controller.ts      # Root controller
+├── app.service.ts         # Root service
+└── main.ts                # Application entry point (bootstrap)
 ```
 
-## Notes and Common Issues
+## 🔐 Authentication Flow
 
-- "cookie-parser" usage: make sure `cookie-parser` is used as middleware correctly in `main.ts`:
-  - `import * as cookieParser from 'cookie-parser';` then `app.use(cookieParser());`
-  - or `import cookieParser from 'cookie-parser';` and `app.use(cookieParser());` depending on your TS config.
-- If you see TypeScript error "The expression cannot be called. Type 'typeof cookieParser' has no call signatures." it usually means the import style conflicts with `esModuleInterop`/`allowSyntheticDefaultImports`. Use the `import * as cookieParser from 'cookie-parser'` syntax and call `cookieParser()`.
+### 1. **User Registration**
 
-## Testing
+```http
+POST /auth/signup
+Content-Type: application/json
 
-Run unit and e2e tests with:
+{
+  "email": "user@example.com",
+  "password": "SecurePassword123",
+  "name": "John Doe"
+}
+```
 
-PowerShell
-```powershell
+- Password is hashed with **Argon2**
+- User stored in PostgreSQL
+- Returns user object (without password)
+
+### 2. **User Login**
+
+```http
+POST /auth/signin
+Content-Type: application/json
+
+{
+  "email": "user@example.com",
+  "password": "SecurePassword123"
+}
+```
+
+Response:
+```json
+{
+  "access_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  "refresh_token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+}
+```
+
+- **Access Token**: Short-lived (15 minutes), used for API requests
+- **Refresh Token**: Long-lived (7 days), used to get new access tokens
+
+### 3. **Accessing Protected Routes**
+
+```http
+GET /users/me
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+The server validates the JWT and extracts user information.
+
+### 4. **Refreshing Tokens**
+
+```http
+POST /auth/refresh
+Authorization: Bearer YOUR_REFRESH_TOKEN
+```
+
+Returns a new access token without requiring login.
+
+### 5. **Logout**
+
+```http
+POST /auth/logout
+Authorization: Bearer YOUR_ACCESS_TOKEN
+```
+
+Invalidates the refresh token in the database.
+
+## 🌐 API Endpoints
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `POST` | `/auth/signup` | Register a new user | ❌ |
+| `POST` | `/auth/signin` | Login and get tokens | ❌ |
+| `POST` | `/auth/refresh` | Refresh access token | 🔄 Refresh Token |
+| `POST` | `/auth/logout` | Logout user | ✅ Access Token |
+
+### User Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| `GET` | `/users/me` | Get current user info | ✅ |
+| `GET` | `/users` | Get all users | ✅ |
+| `GET` | `/users/:id` | Get user by ID | ✅ |
+| `PATCH` | `/users/:id` | Update user | ✅ |
+| `DELETE` | `/users/:id` | Delete user | ✅ |
+
+### Example Requests
+
+**Register:**
+```bash
+curl -X POST http://localhost:3000/auth/signup \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "Password123",
+    "name": "Test User"
+  }'
+```
+
+**Login:**
+```bash
+curl -X POST http://localhost:3000/auth/signin \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "test@example.com",
+    "password": "Password123"
+  }'
+```
+
+**Get Current User:**
+```bash
+curl http://localhost:3000/users/me \
+  -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
+```
+
+
+## 🧪 Testing
+
+### Run All Tests
+
+```bash
+# Unit tests
 npm run test
+
+# Watch mode (runs tests on file changes)
+npm run test:watch
+
+# E2E tests
 npm run test:e2e
+
+# Test coverage
+npm run test:cov
+
+# Debug tests
+npm run test:debug
 ```
 
-## Docker
+### Test Structure
 
-This repo contains a `docker-compose.yml` that starts a PostgreSQL instance used by the application. To run DB locally with Docker:
+Tests are located in:
+- **Unit tests**: `src/**/*.spec.ts`
+- **E2E tests**: `test/**/*.e2e-spec.ts`
 
-PowerShell
-```powershell
-docker compose up -d
+Example test output:
+```
+PASS  src/auth/auth.service.spec.ts
+PASS  src/users/users.service.spec.ts
+Test Suites: 2 passed, 2 total
+Tests:       12 passed, 12 total
 ```
 
-Then set DB environment variables in `.env` to match the docker-compose settings.
+## 🛡 Security Best Practices
 
-## Contributing
+This project implements several security measures:
 
-Contributions are welcome. Please open issues or PRs. Keep changes small and focused.
+- ✅ **Password Hashing**: Argon2 (winner of Password Hashing Competition)
+- ✅ **JWT Secrets**: Separate secrets for access and refresh tokens
+- ✅ **Token Expiration**: Access tokens expire in 15 minutes
+- ✅ **Refresh Token Rotation**: Refresh tokens are hashed in database
+- ✅ **Input Validation**: DTOs with class-validator
+- ✅ **SQL Injection Protection**: TypeORM parameterized queries
+- ✅ **CORS**: Configurable CORS settings
+- ✅ **Environment Variables**: Sensitive data in `.env`
 
-## License
+### Production Checklist
 
-This project is licensed under the MIT License — see the [LICENSE](./LICENSE) file for details.
+Before deploying to production:
+
+- [ ] Change all JWT secrets to strong random values
+- [ ] Update database credentials
+- [ ] Enable HTTPS only
+- [ ] Configure CORS for your domain
+- [ ] Set up rate limiting
+- [ ] Enable logging and monitoring
+- [ ] Use environment-specific `.env` files
+- [ ] Review and update token expiration times
+- [ ] Set up database backups
+- [ ] Enable helmet middleware for security headers
+
+## 🐛 Common Issues & Solutions
+
+### Issue 1: TypeScript Error with cookie-parser
+
+**Error:**
+```
+This expression is not callable.
+Type 'typeof cookieParser' has no call signatures.
+```
+
+**Solution:**
+The import in `src/main.ts` is already correctly configured:
+```typescript
+import * as cookieParser from 'cookie-parser';
+app.use(cookieParser());
+```
+
+If you still see this error, ensure your `tsconfig.json` has:
+```json
+{
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true
+  }
+}
+```
+
+### Issue 2: Database Connection Failed
+
+**Error:**
+```
+Error: connect ECONNREFUSED 127.0.0.1:5433
+```
+
+**Solution:**
+1. Make sure PostgreSQL is running:
+   ```bash
+   docker compose up -d
+   ```
+2. Check if port 5433 is available:
+   ```bash
+   netstat -an | findstr 5433
+   ```
+3. Verify `.env` database credentials match `docker-compose.yml`
+
+### Issue 3: JWT Token Invalid
+
+**Error:**
+```
+401 Unauthorized
+```
+
+**Solution:**
+1. Check if token is included in header: `Authorization: Bearer YOUR_TOKEN`
+2. Verify token hasn't expired (access tokens expire in 15 min)
+3. Use refresh token endpoint to get a new access token
+4. Make sure JWT secrets in `.env` match server configuration
+
+### Issue 4: Port 3000 Already in Use
+
+**Solution:**
+```bash
+# Find process using port 3000
+netstat -ano | findstr :3000
+
+# Kill the process (replace PID with actual process ID)
+taskkill /PID <PID> /F
+```
+
+Or change the port in `src/main.ts`:
+```typescript
+await app.listen(3001); // Use different port
+```
+
+## 📝 Available Scripts
+
+| Script | Description |
+|--------|-------------|
+| `npm run build` | Compile TypeScript to JavaScript |
+| `npm run start` | Start the application |
+| `npm run start:dev` | Start with hot-reload (watch mode) |
+| `npm run start:debug` | Start in debug mode |
+| `npm run start:prod` | Start production build |
+| `npm run format` | Format code with Prettier |
+| `npm run lint` | Lint and fix code with ESLint |
+| `npm run test` | Run unit tests |
+| `npm run test:watch` | Run tests in watch mode |
+| `npm run test:cov` | Generate test coverage report |
+| `npm run test:debug` | Debug tests |
+| `npm run test:e2e` | Run end-to-end tests |
+
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. **Fork** the repository
+2. **Create** a feature branch (`git checkout -b feature/amazing-feature`)
+3. **Commit** your changes (`git commit -m 'Add some amazing feature'`)
+4. **Push** to the branch (`git push origin feature/amazing-feature`)
+5. **Open** a Pull Request
+
+### Development Guidelines
+
+- Write tests for new features
+- Follow the existing code style (use ESLint and Prettier)
+- Update documentation as needed
+- Keep commits small and focused
+- Write clear commit messages
+
+## 📖 Learning Resources
+
+- [NestJS Documentation](https://docs.nestjs.com/)
+- [NestJS Authentication](https://docs.nestjs.com/security/authentication)
+- [JWT.io](https://jwt.io/) - Debug and decode JWTs
+- [TypeORM Documentation](https://typeorm.io/)
+- [PostgreSQL Documentation](https://www.postgresql.org/docs/)
+- [Passport.js](http://www.passportjs.org/)
+
+## 📄 License
+
+This project is licensed under the **UNLICENSED** License - see the [package.json](./package.json) file for details.
 
 ---
 
-If you'd like, I can also:
-- add an example `.env.example` file,
-- add simple Postman collection or curl examples,
-- fix any TypeScript errors (like the cookie-parser import issue) directly in `src/main.ts`.
-Just tell me which you'd prefer next.
+<div align="center">
+  
+### ⭐ If you found this helpful, please give it a star!
+
+Made with ❤️ using [NestJS](https://nestjs.com/)
+
+[Report Bug](https://github.com/wendel211/authentication-authorization-JWT/issues) · [Request Feature](https://github.com/wendel211/authentication-authorization-JWT/issues)
+
+</div>
