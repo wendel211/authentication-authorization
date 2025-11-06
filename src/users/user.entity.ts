@@ -1,11 +1,17 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 export enum UserRole {
   USER = 'user',
   ADMIN = 'admin',
 }
 
-@Entity()
+@Entity('users')
 export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
@@ -13,12 +19,19 @@ export class User {
   @Column({ unique: true })
   email: string;
 
+  // senha com hash argon2
   @Column()
-  hash: string;
-
-  @Column({ type: 'text', nullable: true })
-  hashedRt?: string;
+  password: string;
 
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
+
+  @Column({ type: 'text', nullable: true })
+  hashedRt?: string | null;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
 }

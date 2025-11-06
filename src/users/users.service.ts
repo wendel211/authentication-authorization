@@ -7,32 +7,34 @@ import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  constructor(@InjectRepository(User) private readonly repo: Repository<User>) {}
 
-  async create(dto: CreateUserDto) {
+  async create(dto: CreateUserDto): Promise<User> {
     const exists = await this.repo.findOne({ where: { email: dto.email } });
     if (exists) throw new ConflictException('Email já cadastrado.');
 
     const hash = await argon2.hash(dto.password);
+
     const user = this.repo.create({
       email: dto.email,
       password: hash,
       role: dto.role ?? UserRole.USER,
     });
-    return this.repo.save(user);
+
+    return await this.repo.save(user);
   }
 
-  findByEmail(email: string) {
+  async findByEmail(email: string): Promise<User | null> {
     return this.repo.findOne({ where: { email } });
   }
 
-  async findById(id: string) {
+  async findById(id: string): Promise<User> {
     const user = await this.repo.findOne({ where: { id } });
     if (!user) throw new NotFoundException('Usuário não encontrado');
     return user;
   }
 
-  async setRefreshToken(userId: string, hashedRt: string | null) {
-    await this.repo.update({ id: userId }, { hashedRt });
+  async setRefreshToken(userId: string, hashedRt: string | null): Promise<void> {
+    await this.repo.update({ id: userId }, { hashedRt: hashedRt ?? null });
   }
 }
