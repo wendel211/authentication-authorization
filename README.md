@@ -135,8 +135,8 @@ This will start:
 - **pgAdmin** (web interface) on `http://localhost:5050`
 
 pgAdmin credentials:
-- Email: `admin@yobi.local`
-- Password: `admin123`
+- Email: `teste@example.local`
+- Password: `teste123`
 
 ### 5. Run the application
 
