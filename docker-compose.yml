@@ -22,7 +22,7 @@ services:
     depends_on:
       - postgres
     environment:
-      PGADMIN_DEFAULT_EMAIL: admin@yobi.local
-      PGADMIN_DEFAULT_PASSWORD: admin123
+      PGADMIN_DEFAULT_EMAIL: teste@example.local
+      PGADMIN_DEFAULT_PASSWORD: teste123
     ports:
       - "5050:80"
